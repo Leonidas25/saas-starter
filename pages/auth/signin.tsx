@@ -11,6 +11,7 @@ export default function SignIn({ providers }: { providers: Providers }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // This calls the credentials provider if available.
     signIn("credentials", {
       email,
       password,
@@ -19,37 +20,46 @@ export default function SignIn({ providers }: { providers: Providers }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-100">
       <h1 className="text-3xl font-bold mb-4">Sign In</h1>
-      <form onSubmit={handleSubmit} className="w-full max-w-sm">
-        <div className="mb-4">
-          <label className="block mb-2">Email</label>
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-            placeholder="user@example.com"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-            placeholder="password"
-          />
-        </div>
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-          Sign In
+      {providers.credentials ? (
+        <form onSubmit={handleSubmit} className="w-full max-w-sm">
+          <div className="mb-4">
+            <label className="block mb-2">Email</label>
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="user@example.com"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="password"
+            />
+          </div>
+          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+            Sign In
+          </button>
+        </form>
+      ) : (
+        <button
+          onClick={() => signIn("keycloak", { callbackUrl: "/dashboard" })}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500"
+        >
+          Sign In with Keycloak
         </button>
-      </form>
+      )}
       <p className="mt-4">
         Don&apos;t have an account?{" "}
         <Link href="/auth/signup" className="text-blue-500 underline">
-            Sign Up
+          Sign Up
         </Link>
       </p>
     </div>

@@ -1,38 +1,16 @@
 import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import { AuthOptions } from "next-auth";
+import KeycloakProvider from "next-auth/providers/keycloak"
 
-export default NextAuth({
-  session: { strategy: "jwt" },
+export const authOptions: AuthOptions = {
   providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: {
-          label: "Email",
-          type: "text",
-          placeholder: "user@example.com",
-        },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials, req) {
-        if (!credentials || !credentials.email || !credentials.password) {
-          return null;
-        }
-
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
-
-        // Dummy authentication
-        if (email === "user@example.com" && password === "password") {
-          return { id: '1', name: "Demo User", email: "user@example.com" };
-        }
-        return null;
-      },
-    }),
+    KeycloakProvider({
+      clientId: process.env.KEYCLOAK_CLIENT_ID,
+      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET,
+      issuer: process.env.KEYCLOAK_ISSUER
+    })
   ],
-  pages: {
-    signIn: "/auth/signin",
-  },
-});
+  secret: process.env.NEXTAUTH_SECRET,
+}
+const handler = NextAuth(authOptions);
+export default handler;

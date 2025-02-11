@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  nextjs:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXTAUTH_URL=http://localhost:3000
+      - KEYCLOAK_CLIENT_ID=saas-auth-client
+      - KEYCLOAK_CLIENT_SECRET=N01Ul1NiyqniN2yXcWqnQBGgPyhVjv8j
+      - NEXTAUTH_SECRET=your-generated-secret
+      - KEYCLOAK_ISSUER=http://host.docker.internal:8080/realms/saas-auth

@@ -1,14 +1,15 @@
-import { useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import Layout from "../components/Layout";
+import { useEffect } from "react";
 import CommonComponent from "../components/CommonComponent";
 
 export default function Settings() {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
+  const { status } = useSession();
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      signIn();
+      signIn("keycloak");
     }
   }, [status]);
 
@@ -16,8 +17,10 @@ export default function Settings() {
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">Settings</h1>
-      <CommonComponent message="This is a reusable component on the Settings page." />
+      <div className="py-6">
+        <h1 className="text-3xl font-bold mb-6">Settings </h1>
+        <CommonComponent message="Settings content goes here." />
+      </div>
     </Layout>
   );
 }
